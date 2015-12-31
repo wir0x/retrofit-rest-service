@@ -10,9 +10,6 @@ import retrofit.http.GET;
 public interface PersonaService {
 
     @GET("/daniel")
-    Call<Object> loadPersonas();
-
-    @GET("/daniel")
     Call<List<Persona>> findPersonas();
 
 
