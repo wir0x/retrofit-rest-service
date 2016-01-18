@@ -1,2 +1,3 @@
-# retrofit-rest-service
-easy example that consume rest service with retrofit
+# Retrofit Sample
+
+Consume rest service with retrofit v.2.0.0-beta2
