@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.squareup.okhttp.ResponseBody;
 import com.velasquez.salazar.gonzalo.retrofit_rest_service.API.PersonaService;
+import com.velasquez.salazar.gonzalo.retrofit_rest_service.API.SubscriptionService;
 import com.velasquez.salazar.gonzalo.retrofit_rest_service.model.Persona;
+import com.velasquez.salazar.gonzalo.retrofit_rest_service.model.SubscriptionDto;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tv;
     private ProgressBar progressBar;
-    private static final String API = "http://arg.com.bo";
+    private static final String API = "http://192.168.0.141:8080";
+//    private static final String API = "http://arg.com.bo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +55,21 @@ public class MainActivity extends AppCompatActivity {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
-                PersonaService personaService = rf.create(PersonaService.class);
+                SubscriptionService subscriptionService = rf.create(SubscriptionService.class);
+//                PersonaService subscriptionService = rf.create(PersonaService.class);
 
-                Call call = personaService.findPersonas();
+                Call call = subscriptionService.getSubscription();
 
                 call.enqueue(new Callback() {
                     @Override
                     public void onResponse(Response response, Retrofit retrofit) {
 
-                        List<Persona> dataModelPersona = (ArrayList) response.body();
+                        Log.i("response'", response.toString());
+//                        SubscriptionDto dataModel = (SubscriptionDto) response.body();
+                        SubscriptionDto dataModel = (SubscriptionDto) response.body();
 
-                        if (dataModelPersona == null) {
+
+                        if (dataModel == null) {
                             // ERROR 404 (NOT FOUND)
                             ResponseBody responseBody = response.errorBody();
 
@@ -78,11 +85,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                         } else {
                             // ERROR 200 (OK)
-                            tv.setText(String.format("id: %s\n nombre: %s \n apellido1: %s \n apellido2: %s"
-                                    , dataModelPersona.get(0).getId()
-                                    , dataModelPersona.get(0).getNombre()
-                                    , dataModelPersona.get(0).getApellido1()
-                                    , dataModelPersona.get(0).getApellido2()));
+                            Log.i("subscriptionDto: ", dataModel.toString());
+
+                            tv.setText(String.format("id: %s\n deviceName: %s \n Color: %s \n icon: %s"
+                                    , dataModel.getDevice().getId()
+                                    , dataModel.getDevice().getName()
+                                    , dataModel.getDevice().getColor()
+                                    , dataModel.getDevice().getIcon()));
 
                         }
                         progressBar.setVisibility(View.INVISIBLE);
